@@ -1,13 +1,10 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api/api';
 
 const OtpVerification = ({ route, navigation }) => {
   const { email } = route.params;
   const [otp, setOtp] = useState('');
-
-
-
 
   const handleVerifyOtp = async()=>{
     if(!otp){
@@ -16,7 +13,7 @@ const OtpVerification = ({ route, navigation }) => {
     }
 
     try{
-      const response = await axios.post('https://yourapi.com/api/v1/auth/verify-otp',{email,otp});
+      const response = await api.post('/auth/verify-otp',{email,otp});
 
       if(response.data.success){
         Alert.alert('Success','OTP Verified! You can now reset your Password.');

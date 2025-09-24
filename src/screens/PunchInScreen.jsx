@@ -10,7 +10,7 @@ import { requestPermissions } from '../base/permissions';
 import api from '../api/api';
 
 const PunchInScreen = ({ navigation, route }) => {
-  const { type } = route.params; // 'punch_in' or 'punch_out'
+  const { type } = route.params; 
   const dispatch = useDispatch();
   const { access } = useSelector(state => state.auth);
 

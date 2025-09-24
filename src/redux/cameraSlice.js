@@ -14,6 +14,6 @@ const cameraSlice = createSlice({
     },
   },
 });
-
+ 
 export const { setImageUri, clearImageUri } = cameraSlice.actions;
 export default cameraSlice.reducer;

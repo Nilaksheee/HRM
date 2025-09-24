@@ -9,18 +9,26 @@ export const getTodayAttendance = async () => {
 
 // Get all attendance
 export const getAllAttendance = async () => {
-  const res = await api.get("https://3gxqzdsp-2000.inc1.devtunnels.ms/api/v1/attendance/today/");
+  const res = await api.get("/attendance/today/");
   return res.data;
 };
 
 // Punch In
-export const punchIn = async (payload) => {
-  const res = await api.post("https://3gxqzdsp-2000.inc1.devtunnels.ms/api/v1/attendance/mark/", payload);
-  return res.data;
-};
+// export const punchIn = async (payload) => {
+//   const res = await api.post("/attendance/mark/", payload);
+//   return res.data;
+// };
 
 // Punch Out
-export const punchOut = async (payload) => {
-  const res = await api.post("https://3gxqzdsp-2000.inc1.devtunnels.ms/api/v1/attendance/mark/", payload);
+export const markAttendance = async (payload) => {
+  const res = await api.post("/attendance/mark/", payload);
   return res.data;
 };
+ 
+// Fetch monthly attendance
+export const getMonthlyAttendance = async () => {
+  const res = await api.get("/attendance/monthly/"); 
+    return res.data; 
+ };
+
+

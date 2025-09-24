@@ -1,4 +1,4 @@
-// redux/permissionsSlice.js
+// // redux/permissionsSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -25,4 +25,8 @@ const permissionsSlice = createSlice({
 
 export const { setPunchInTime, setPunchOutTime, resetPunch } = permissionsSlice.actions;
 
+
 export default permissionsSlice.reducer;
+ 
+
+// redux/permissionsSlice.js

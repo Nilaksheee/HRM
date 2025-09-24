@@ -14,10 +14,12 @@ import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
-import axios from 'axios';
+import api from '../api/api';
 import { setCredentials } from '../redux/store';
 import LinearGradient from 'react-native-linear-gradient';
 import HomeScreen from '../screens/HomeScreen';
+import axios from "axios";
+
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('nilaksheesingh1@gmail.com');
@@ -29,38 +31,42 @@ const LoginScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  // const handleLogin = async () => {
-  //   if (email && password) {
-  //     try {
-  //       const response = await axios.post(
-  //         'https://3gxqzdsp-2000.inc1.devtunnels.ms/api/v1/auth/token',
-  //         { email, password }
-  //       );
-  //       const data = response.data;
 
-  //       if (data.message === 'Login successful') {
-  //         Alert.alert('Success', 'Login Successful');
 
-  //         dispatch(
-  //           setCredentials({
-  //             access: data.access,
-  //             refresh: data.refresh,
-  //             user: response.data.user,   
-  //           })
-  //         );
+  
 
-  //         navigation.navigate('Home'); 
-  //       } else {
-  //         Alert.alert('Login Failed', data.message || 'Invalid credentials');
-  //       }
-  //     } catch (error) {
-  //       console.error('Error:', error);
-  //       Alert.alert('Error', 'Something went wrong');
-  //     }
-  //   } else {
-  //     Alert.alert('Error', 'Email and password are required');
-  //   }
-  // };
+  const handleLogin = async () => {
+    if (email && password) {
+      try {
+        const response = await axios.post(
+          'https://3gxqzdsp-2000.inc1.devtunnels.ms/api/v1/auth/token',
+          { email, password }
+        );
+        const data = response.data;
+
+        if (data.message === 'Login successful') {
+          Alert.alert('Success', 'Login Successful');
+
+          dispatch(
+            setCredentials({
+              access: data.access,
+              refresh: data.refresh,
+              user: response.data.user,   
+            })
+          );
+
+          navigation.navigate('Home'); 
+        } else {
+          Alert.alert('Login Failed', data.message || 'Invalid credentials');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        Alert.alert('Error', 'Something went wrong');
+      }
+    } else {
+      Alert.alert('Error', 'Email and password are required');
+    }
+  };
 
   const handleSendOtp = async () => {
     if (!forgotEmail) {
@@ -69,8 +75,8 @@ const LoginScreen = () => {
     }
 
     try {
-      const response = await axios.post(
-        'https://3gxqzdsp-2000.inc1.devtunnels.ms/api/v1/password-management/forgot',
+      const response = await api.post(
+        '/password-management/forgot',
         { email: forgotEmail }
       );
 
@@ -158,7 +164,7 @@ const LoginScreen = () => {
           </TouchableOpacity>
 
           {/* Login Button */}
-          <TouchableOpacity style={styles.button} onPress={()=>navigation.navigate('Home')}>
+          <TouchableOpacity style={styles.button} onPress={handleLogin}>
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
 
