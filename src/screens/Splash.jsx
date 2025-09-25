@@ -84,16 +84,12 @@ const styles = StyleSheet.create({
     width: 170,
     height: 170,
     borderRadius: 85,
-    backgroundColor: '#fff', // white circle background
+    backgroundColor: '#fff', 
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 25,
-    elevation: 10, // Android shadow
-    shadowColor: '#000', // iOS shadow
-    shadowOpacity: 0.25,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 6,
-  },
+    elevation: 10, 
+   },
   logo: {
     width: 110,
     height: 110,

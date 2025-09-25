@@ -1,25 +1,4 @@
-// import { PermissionsAndroid, Platform, Alert } from 'react-native';
 
-// // This function will always return true to bypass all permission checks
-// export const requestPermissions = async () => {
-//   return true;
-// };
-
-// // Mock the actual permission request to avoid system dialogs
-// export const mockRequestCameraPermission = async () => {
-//   return PermissionsAndroid.RESULTS.GRANTED;
-// };
-
-// export const mockRequestLocationPermission = async () => {
-//   return PermissionsAndroid.RESULTS.GRANTED;
-// };
-
-// export const mockRequestStoragePermission = async () => {
-//   return PermissionsAndroid.RESULTS.GRANTED;
-// };
-
-// // Keep the old function name for backward compatibility
-// export const permissions = requestPermissions;
 
 
 import { Platform, Alert } from "react-native";

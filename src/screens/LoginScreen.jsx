@@ -38,7 +38,7 @@ const LoginScreen = () => {
   const handleLogin = async () => {
     if (email && password) {
       try {
-        const response = await axios.post(
+        const response = await api.post(
           'https://3gxqzdsp-2000.inc1.devtunnels.ms/api/v1/auth/token',
           { email, password }
         );

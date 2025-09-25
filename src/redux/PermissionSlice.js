@@ -1,4 +1,4 @@
-// // redux/permissionsSlice.js
+
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -29,4 +29,47 @@ export const { setPunchInTime, setPunchOutTime, resetPunch } = permissionsSlice.
 export default permissionsSlice.reducer;
  
 
-// redux/permissionsSlice.js
+
+
+// import { createSlice } from "@reduxjs/toolkit";
+
+// const initialState = {
+//   punchInTime: null,
+//   punchInDate: null,
+//   punchOutTime: null,
+//   punchOutDate: null,
+// };
+
+// const permissionsSlice = createSlice({
+//   name: "permissions",
+//   initialState,
+//   reducers: {
+//     setPunchInTime: (state, action) => {
+//       // state.punchInTime = action.payload;
+//       state.punchInTime = action.payload.time;
+//       state.punchInDate = action.payload.date;
+//     },
+//     setPunchOutTime: (state, action) => {
+//       state.punchOutTime = action.payload.time;
+//       state.punchOutDate = action.payload.date;
+//     },
+//     resetPunch: (state) => {
+//        state.punchInTime = null;
+//         state.punchInDate = null;
+//         state.punchOutTime = null;
+//         state.punchOutDate = null;
+//     },
+//   },
+// });
+
+// export const { setPunchInTime, setPunchOutTime, resetPunch } = permissionsSlice.actions;
+
+
+// export default permissionsSlice.reducer;
+
+
+
+
+
+
+

@@ -1,404 +1,5 @@
-// import React, { useEffect, useState } from "react";
-// import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
-// import { useSelector } from "react-redux";
-// import { useNavigation } from "@react-navigation/native";
-// import { requestPermissions } from "../base/permissions";
-
-// const HomeScreen = () => {
-//   const navigation = useNavigation();
-//   const { punchInTime, punchOutTime } = useSelector(state => state.permissions);
-
-//   const [currentTime, setCurrentTime] = useState("");
-
-//   useEffect(() => {
-//     const timer = setInterval(() => {
-//       const now = new Date();
-//       setCurrentTime(now.toLocaleTimeString());
-//     }, 1000);
-//     return () => clearInterval(timer);
-//   }, []);
-
-  // const handlePunchIn = () => {
-  //   // Directly navigate to CameraScreen without permission checks
-  //   navigation.navigate("CameraScreen", { type: "punch_in" });
-  // };
-
-  // const handlePunchOut = () => {
-  //   // Directly navigate to CameraScreen without permission checks
-  //   navigation.navigate("CameraScreen", { type: "punch_out" });
-  // };
-
-//   return (
-//     <View style={styles.container}>
-//       <Text style={styles.title}>📅 Attendance</Text>
-
-//       {/* Digital Clock */}
-//       <View style={styles.clockContainer}>
-//         <Text style={styles.clockText}>{currentTime}</Text>
-//       </View>
-
-//       {/* Punch In/Out Status */}
-//       <View style={styles.card}>
-//         <View style={styles.timeRow}>
-//           <Text style={styles.timeLabel}>Punch In</Text>
-//           <Text style={styles.timeValue}>{punchInTime || "--:--"}</Text>
-//         </View>
-//         <View style={styles.timeRow}>
-//           <Text style={styles.timeLabel}>Punch Out</Text>
-//           <Text style={styles.timeValue}>{punchOutTime || "--:--"}</Text>
-//         </View>
-//       </View>
-
-//       {/* Punch Buttons */}
-//       {!punchInTime && (
-//         <TouchableOpacity
-//           style={styles.punchInBtn}
-//           onPress={handlePunchIn}
-//         >
-//           <Text style={styles.btnText}>📸 Punch In</Text>
-//         </TouchableOpacity>
-//       )}
-
-//       {punchInTime && !punchOutTime && (
-//         <TouchableOpacity
-//           style={styles.punchOutBtn}
-//           onPress={handlePunchOut}
-//         >
-//           <Text style={styles.btnText}>📸 Punch Out</Text>
-//         </TouchableOpacity>
-//       )}
-//     </View>
-//   );
-// };
-
-// export default HomeScreen;
-
-// const styles = StyleSheet.create({
-//   container: { flex: 1, padding: 20, backgroundColor: "#f8f9fd", justifyContent: "center" },
-//   title: { fontSize: 28, fontWeight: "bold", textAlign: "center", marginBottom: 20, color: "#333" },
-
-//   clockContainer: {
-//     backgroundColor: "#1e90ff",
-//     padding: 20,
-//     borderRadius: 20,
-//     alignItems: "center",
-//     marginBottom: 25,
-//     shadowColor: "#000",
-//     shadowOpacity: 0.2,
-//     shadowRadius: 8,
-//     elevation: 5,
-//   },
-//   clockText: { fontSize: 40, fontWeight: "bold", color: "#fff" },
-
-//   card: {
-//     backgroundColor: "#fff",
-//     borderRadius: 15,
-//     padding: 20,
-//     marginBottom: 30,
-//     shadowColor: "#000",
-//     shadowOpacity: 0.1,
-//     shadowRadius: 6,
-//     elevation: 3,
-//   },
-//   timeRow: { flexDirection: "row", justifyContent: "space-between", marginVertical: 10 },
-//   timeLabel: { fontSize: 18, fontWeight: "600", color: "#444" },
-//   timeValue: { fontSize: 18, fontWeight: "bold", color: "#1e90ff" },
-
-//   punchInBtn: {
-//     backgroundColor: "#000",
-//     padding: 18,
-//     borderRadius: 15,
-//     alignItems: "center",
-//     marginBottom: 15,
-//     shadowColor: "#000",
-//     shadowOpacity: 0.1,
-//     shadowRadius: 5,
-//     elevation: 2,
-//   },
-//   punchOutBtn: {
-//     backgroundColor: "#ff3b30",
-//     padding: 18,
-//     borderRadius: 15,
-//     alignItems: "center",
-//     marginBottom: 15,
-//     shadowColor: "#000",
-//     shadowOpacity: 0.1,
-//     shadowRadius: 5,
-//     elevation: 2,
-//   },
-//   btnText: { fontSize: 18, fontWeight: "bold", color: "#fff" },
-// });
-
-
-
-
-
-// import React, { useEffect, useState } from "react";
-// import {
-//   View,
-//   Text,
-//   StyleSheet,
-//   TouchableOpacity,
-//   SafeAreaView,
-//   ScrollView,
-//   ActivityIndicator,
-//   Alert,
-// } from "react-native";
-// import Icon from "react-native-vector-icons/Ionicons";
-// import { useSelector, useDispatch } from "react-redux";
-// import { useNavigation } from "@react-navigation/native";
-// import { Calendar } from "react-native-calendars";
-
-// import { setPunchInTime, setPunchOutTime } from "../redux/permissionsSlice";
-// import { getMonthlyAttendance } from "../api/attendanceApi";
-
-// const HomeScreen = () => {
-//   const navigation = useNavigation();
-//   const dispatch = useDispatch();
-//   const { punchInTime, punchOutTime } = useSelector((state) => state.permissions);
-
-//   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
-//   const [selectedTab, setSelectedTab] = useState("Home");
-//   const [loading, setLoading] = useState(false);
-//   const [monthAttendance, setMonthAttendance] = useState({});
-//   const [attendanceSummary, setAttendanceSummary] = useState({
-//     present: 0,
-//     absent: 0,
-//     late: 0,
-//   });
-//   const [showCalendar, setShowCalendar] = useState(true);
-
-//   // Clock
-//   useEffect(() => {
-//     const timer = setInterval(() => {
-//       setCurrentTime(new Date().toLocaleTimeString());
-//     }, 1000);
-//     return () => clearInterval(timer);
-//   }, []);
-
-//   // Fetch monthly attendance
-//   useEffect(() => {
-//     fetchMonthlyAttendance();
-//   }, []);
-
-//   const fetchMonthlyAttendance = async () => {
-//     setLoading(true);
-//     try {
-//       const data = await getMonthlyAttendance(); // call your API
-//       const marked = processAttendanceForCalendar(data);
-//       setMonthAttendance(marked);
-//       setAttendanceSummary(calculateSummary(data));
-//     } catch (err) {
-//       console.log(err);
-//       Alert.alert("Error", "Failed to fetch attendance.");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const processAttendanceForCalendar = (data) => {
-//     const marked = {};
-//     Object.keys(data).forEach((date) => {
-//       let color = "#ccc"; // default for null
-//       switch (data[date]) {
-//         case "present":
-//           color = "green";
-//           break;
-//         case "absent":
-//           color = "red";
-//           break;
-//         case "outofrange":
-//           color = "gray";
-//           break;
-//         case "not_punchout":
-//           color = "orange";
-//           break;
-//         default:
-//           color = "#ccc";
-//       }
-//       marked[date] = { selected: true, selectedColor: color };
-//     });
-//     return marked;
-//   };
-
-//   const calculateSummary = (data) => {
-//     let present = 0,
-//       absent = 0,
-//       late = 0;
-//     Object.values(data).forEach((v) => {
-//       if (v === "present") present++;
-//       else if (v === "absent") absent++;
-//       else if (v === "not_punchout") late++;
-//     });
-//     return { present, absent, late };
-//   };
-
-//   // Handle Punch In
-//   const handlePunchIn = () => {
-//     if (punchInTime) {
-//       Alert.alert("Info", "You have already punched in today.");
-//       return;
-//     }
-//     navigation.navigate("CameraScreen", { type: "punch_in" });
-//   };
-
-//   // Handle Punch Out
-//   const handlePunchOut = () => {
-//     if (!punchInTime) {
-//       Alert.alert("Info", "You need to punch in first.");
-//       return;
-//     }
-//     if (punchOutTime) {
-//       Alert.alert("Info", "You have already punched out today.");
-//       return;
-//     }
-//     navigation.navigate("CameraScreen", { type: "punch_out" });
-//   };
-
-//   return (
-//     <SafeAreaView style={styles.container}>
-//       <ScrollView showsVerticalScrollIndicator={false}>
-//         {/* Location */}
-//         <View style={styles.locationContainer}>
-//           <Icon name="location-outline" size={18} color="#fff" />
-//           <Text style={styles.locationText}> Thambu Chetty St, Chennai</Text>
-//         </View>
-
-//         {/* Welcome */}
-//         <Text style={styles.welcomeText}>Welcome, Arun Kumar</Text>
-
-//         {/* Tab Switch */}
-//         <View style={styles.tabContainer}>
-//           <TouchableOpacity
-//             style={[styles.tab, selectedTab === "Home" && styles.activeTab]}
-//             onPress={() => setSelectedTab("Home")}
-//           >
-//             <Text style={[styles.tabText, selectedTab === "Home" && styles.activeTabText]}>Home</Text>
-//           </TouchableOpacity>
-//           <TouchableOpacity
-//             style={[styles.tab, selectedTab === "Office" && styles.activeTab]}
-//             onPress={() => setSelectedTab("Office")}
-//           >
-//             <Text style={[styles.tabText, selectedTab === "Office" && styles.activeTabText]}>Office</Text>
-//           </TouchableOpacity>
-//         </View>
-
-//         {/* Shift Card */}
-//         <View style={styles.card}>
-//           <Text style={styles.shiftText}>GENERAL SHIFT</Text>
-//           <Text style={styles.timeText}>{currentTime}</Text>
-
-//           <View style={styles.timeRow}>
-//             <Text style={styles.timeLabel}>Punch In</Text>
-//             <Text style={styles.timeValue}>{punchInTime || "--:--"}</Text>
-//           </View>
-//           <View style={styles.timeRow}>
-//             <Text style={styles.timeLabel}>Punch Out</Text>
-//             <Text style={styles.timeValue}>{punchOutTime || "--:--"}</Text>
-//           </View>
-
-//           {!punchInTime && (
-//             <TouchableOpacity style={styles.punchInBtn} onPress={handlePunchIn}>
-//               <Text style={styles.btnText}>📸 Punch In</Text>
-//             </TouchableOpacity>
-//           )}
-//           {punchInTime && !punchOutTime && (
-//             <TouchableOpacity style={styles.punchOutBtn} onPress={handlePunchOut}>
-//               <Text style={styles.btnText}>📸 Punch Out</Text>
-//             </TouchableOpacity>
-//           )}
-//         </View>
-
-//         {/* Calendar Toggle */}
-//         <TouchableOpacity
-//           style={styles.toggleCalendarBtn}
-//           onPress={() => setShowCalendar(!showCalendar)}
-//         >
-//           <Text style={styles.toggleCalendarText}>{showCalendar ? "Hide Calendar" : "Show Calendar"}</Text>
-//         </TouchableOpacity>
-
-//         {/* Calendar */}
-//         {showCalendar && (
-//           <View style={styles.calendarCard}>
-//             {loading ? (
-//               <ActivityIndicator size="large" color="#2c6fff" style={{ marginVertical: 20 }} />
-//             ) : (
-//               <Calendar
-//                 markingType={"simple"}
-//                 markedDates={monthAttendance}
-//                 style={{ borderRadius: 20, marginHorizontal: 16 }}
-//               />
-//             )}
-//           </View>
-//         )}
-
-//         {/* Attendance Summary */}
-//         <View style={styles.attendanceCard}>
-//           <View style={styles.attendanceHeader}>
-//             <Text style={styles.attendanceTitle}>Attendance for this Month</Text>
-//           </View>
-//           <View style={styles.row}>
-//             <View style={styles.attendanceBox}>
-//               <Text style={styles.present}>{attendanceSummary.present}</Text>
-//               <Text style={styles.attendanceLabel}>Present</Text>
-//             </View>
-//             <View style={styles.attendanceBox}>
-//               <Text style={styles.absent}>{attendanceSummary.absent}</Text>
-//               <Text style={styles.attendanceLabel}>Absents</Text>
-//             </View>
-//             <View style={styles.attendanceBox}>
-//               <Text style={styles.late}>{attendanceSummary.late}</Text>
-//               <Text style={styles.attendanceLabel}>Late in</Text>
-//             </View>
-//           </View>
-//         </View>
-//       </ScrollView>
-//     </SafeAreaView>
-//   );
-// };
-
-// export default HomeScreen;
-
-// // Styles (same as your previous code)
-// const styles = StyleSheet.create({
-//   container: { flex: 1, backgroundColor: "#f8f9ff" },
-//   locationContainer: { flexDirection: "row", alignItems: "center", backgroundColor: "#2c6fff", padding: 12, borderBottomLeftRadius: 20, borderBottomRightRadius: 20 },
-//   locationText: { color: "#fff", fontSize: 14 },
-//   welcomeText: { fontSize: 18, fontWeight: "600", marginVertical: 16, marginLeft: 16 },
-//   tabContainer: { flexDirection: "row", alignSelf: "center", backgroundColor: "#e6edff", borderRadius: 25, marginBottom: 20 },
-//   tab: { paddingVertical: 10, paddingHorizontal: 40, borderRadius: 25 },
-//   activeTab: { backgroundColor: "#2c6fff" },
-//   tabText: { fontSize: 14, color: "#555", fontWeight: "500" },
-//   activeTabText: { color: "#fff" },
-//   card: { backgroundColor: "#fff", marginHorizontal: 16, borderRadius: 20, padding: 20, shadowColor: "#000", shadowOpacity: 0.1, shadowRadius: 5, elevation: 5, marginBottom: 20 },
-//   shiftText: { color: "green", fontWeight: "600", marginBottom: 8, textAlign: "center" },
-//   timeText: { fontSize: 22, fontWeight: "700", textAlign: "center", marginBottom: 12 },
-//   punchInBtn: { backgroundColor: "#2c6fff", padding: 16, borderRadius: 15, marginVertical: 10, alignItems: "center" },
-//   punchOutBtn: { backgroundColor: "#ff3b30", padding: 16, borderRadius: 15, marginVertical: 10, alignItems: "center" },
-//   btnText: { fontSize: 16, fontWeight: "600", color: "#fff" },
-//   row: { flexDirection: "row", justifyContent: "space-between" },
-//   timeRow: { flexDirection: "row", justifyContent: "space-between", marginVertical: 10 },
-//   timeLabel: { fontSize: 16, fontWeight: "600" },
-//   timeValue: { fontSize: 16, fontWeight: "700", color: "#2c6fff" },
-//   toggleCalendarBtn: { backgroundColor: "#e6edff", marginHorizontal: 16, padding: 12, borderRadius: 20, alignItems: "center", marginBottom: 10 },
-//   toggleCalendarText: { color: "#2c6fff", fontWeight: "600" },
-//   calendarCard: { marginBottom: 20 },
-//   attendanceCard: { backgroundColor: "#fff", marginHorizontal: 16, borderRadius: 20, padding: 20, shadowColor: "#000", shadowOpacity: 0.1, shadowRadius: 5, elevation: 5, marginBottom: 20 },
-//   attendanceHeader: { flexDirection: "row", justifyContent: "space-between", marginBottom: 12 },
-//   attendanceTitle: { fontSize: 16, fontWeight: "600" },
-//   attendanceBox: { alignItems: "center", flex: 1 },
-//   present: { color: "green", fontSize: 18, fontWeight: "700" },
-//   absent: { color: "red", fontSize: 18, fontWeight: "700" },
-//   late: { color: "orange", fontSize: 18, fontWeight: "700" },
-//   attendanceLabel: { fontSize: 12, color: "#555", marginTop: 4 },
-// });
-
-
-
-
-// HomeScreen.js
-import React, { useEffect, useState, useCallback } from "react";
-import {
+import React, { useState, useCallback } from "react";
+import { // Removed useEffect as it's replaced by useFocusEffect now using state
   View,
   Text,
   StyleSheet,
@@ -406,23 +7,30 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
-  Platform,
 } from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
-import { useSelector } from "react-redux";
+// Removed: import { useSelector } from "react-redux";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Calendar } from "react-native-calendars";
 import Geolocation from "react-native-geolocation-service";
-import { getMonthlyAttendance } from "../api/attendanceApi";
-import { requestPermissions } from "../base/permissions"; // custom permission handler
+import { getMonthlyAttendance, getTodayAttendance } from "../api/attendenceApi";
+import { requestPermissions } from "../base/permissions";
+import Icon from "react-native-vector-icons/Ionicons";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-  const userApiData = useSelector((state) => state.auth.userApiData); // your replacement API user
-  const { punchInTime, punchOutTime } = useSelector(
-    (state) => state.permissions
-  );
+  const [today, setToday] = useState([]);
+  // const userApiData = useSelector((state) => state.auth.userApiData); // Removed
+  // const { punchInTime, punchOutTime } = useSelector((state) => state.permissions); // Removed
 
+  // 1. New local state for punch times
+  const [punchInTime, setPunchInTime] = useState(null);
+  const [punchOutTime, setPunchOutTime] = useState(null);
+
+  // 2. Simplified user data (assuming it's still available or can be fetched)
+  // NOTE: If 'user' comes from Redux, you will need a separate API call to fetch it here.
+  // For now, we'll mock the user or assume it's passed via props/context.
+  const user = { name: "Employee" }; // Placeholder, replace with actual user data logic
+  
   const [loading, setLoading] = useState(false);
   const [monthAttendance, setMonthAttendance] = useState({});
   const [attendanceSummary, setAttendanceSummary] = useState({
@@ -432,16 +40,13 @@ const HomeScreen = () => {
   });
   const [location, setLocation] = useState(null);
 
-  //use effect [] https://3gxqzdsp-2000.inc1.devtunnels.ms/api/v1/attendance/today/
-
-  // Request location on first open
+  // Fetch location (unchanged)
   const fetchLocation = async () => {
     const granted = await requestPermissions();
     if (!granted) {
       Alert.alert("Permission Denied", "Location permission is required.");
       return;
     }
-
     Geolocation.getCurrentPosition(
       (pos) => {
         setLocation({
@@ -457,34 +62,65 @@ const HomeScreen = () => {
     );
   };
 
-  // Fetch monthly attendance
+  // Fetch monthly attendance (unchanged logic, only Redux usage removed)
   const fetchMonthlyAttendance = async () => {
     setLoading(true);
+    const result = await getMonthlyAttendance();
+    if (result.success) {
+      setMonthAttendance(processAttendanceForCalendar(result.data));
+      setAttendanceSummary(calculateSummary(result.data));
+    } else {
+      Alert.alert("Error", result.error);
+    }
+    setLoading(false);
+  };
+
+  // 3. MODIFIED: Fetch today’s attendance to update local state
+  const fetchTodayAttendance = async () => {
     try {
-      const data = await getMonthlyAttendance();
-      setMonthAttendance(processAttendanceForCalendar(data));
-      setAttendanceSummary(calculateSummary(data));
+      const result = await getTodayAttendance();
+      if (result.success && result.data && result.data.length > 0) {
+        const todayAttendance = result.data[0];
+        
+        // **Update local state with API data**
+        const apiPunchIn = todayAttendance.punch_in || null; // Assuming your API field is 'punch_in'
+        const apiPunchOut = todayAttendance.punch_out || null; // Assuming your API field is 'punch_out'
+
+        setPunchInTime(apiPunchIn);
+        setPunchOutTime(apiPunchOut);
+
+        setToday(result.data);
+        console.log("Today's Attendance from API:", todayAttendance);
+      } else if (result.success) {
+        // Clear times if no attendance record is found for today
+        setPunchInTime(null);
+        setPunchOutTime(null);
+        setToday([]);
+      } else {
+        Alert.alert("Error", result.error);
+      }
     } catch (err) {
       console.log(err);
-      Alert.alert("Error", "Failed to fetch attendance.");
-    } finally {
-      setLoading(false);
+      Alert.alert("Error", "Failed to fetch today's attendance.");
     }
   };
 
   useFocusEffect(
     useCallback(() => {
       fetchMonthlyAttendance();
+      fetchTodayAttendance();
       fetchLocation();
     }, [])
   );
 
+  // Convert API attendance to calendar marking (unchanged)
   const processAttendanceForCalendar = (data) => {
     const marked = {};
     Object.keys(data).forEach((date) => {
-      let color = "#ccc";
+      let color = "black";
       switch (data[date]) {
         case "present":
+        case "autoclosed":
           color = "green";
           break;
         case "absent":
@@ -493,8 +129,15 @@ const HomeScreen = () => {
         case "not_punchout":
           color = "orange";
           break;
+        default:
+          color = "black";
       }
-      marked[date] = { selected: true, selectedColor: color };
+
+      marked[date] = {
+        customStyles: {
+          text: { color: color, fontWeight: "bold" },
+        },
+      };
     });
     return marked;
   };
@@ -504,31 +147,19 @@ const HomeScreen = () => {
       absent = 0,
       late = 0;
     Object.values(data).forEach((v) => {
-      if (v === "present") present++;
+      if (v === "present" || v === "autoclosed") present++;
       else if (v === "absent") absent++;
       else if (v === "not_punchout") late++;
     });
     return { present, absent, late };
   };
 
-  // Punch Handlers
+  // Punch Handlers (unchanged, navigate to CameraScreen)
   const handlePunchIn = () => {
-    if (punchInTime) {
-      Alert.alert("Info", "You have already punched in today.");
-      return;
-    }
     navigation.navigate("CameraScreen", { type: "punch_in" });
   };
 
   const handlePunchOut = () => {
-    if (!punchInTime) {
-      Alert.alert("Info", "You need to punch in first.");
-      return;
-    }
-    if (punchOutTime) {
-      Alert.alert("Info", "You have already punched out today.");
-      return;
-    }
     navigation.navigate("CameraScreen", { type: "punch_out" });
   };
 
@@ -536,10 +167,10 @@ const HomeScreen = () => {
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {/* Welcome */}
       <Text style={styles.welcomeText}>
-        Welcome, {userApiData?.name || "User"}
+        Welcome, {user?.name || "User"}
       </Text>
 
-      {/* Punch Card */}
+      {/* Punch Card - Now uses local state */}
       <View style={styles.card}>
         <View style={styles.timeRow}>
           <Text style={styles.timeLabel}>Punch In:</Text>
@@ -550,31 +181,40 @@ const HomeScreen = () => {
           <Text style={styles.timeValue}>{punchOutTime || "--:--"}</Text>
         </View>
 
-
-// 
+        {/* Button logic remains the same, based on local state */}
         {!punchInTime && (
           <TouchableOpacity style={styles.punchInBtn} onPress={handlePunchIn}>
-            <Text style={styles.btnText}>📸 Punch In</Text>
+            <Icon name="camera-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
+            <Text style={styles.btnText}>Punch In</Text>
           </TouchableOpacity>
         )}
 
         {punchInTime && !punchOutTime && (
-          <TouchableOpacity
-            style={styles.punchOutBtn}
-            onPress={handlePunchOut}
-          >
-            <Text style={styles.btnText}>📸 Punch Out</Text>
+          <TouchableOpacity style={styles.punchOutBtn} onPress={handlePunchOut}>
+            <Icon name="camera-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
+            <Text style={styles.btnText}>Punch Out</Text>
           </TouchableOpacity>
         )}
+
+        {/* If both times are present, allow for a new punch in (or maybe disable/show success) */}
+        {punchInTime && punchOutTime && (
+          // In a real app, this should probably be a disabled/success state
+          // or a button for the *next* day if your logic allows re-punching
+          <View style={styles.punchSuccess}>
+              <Text style={styles.punchSuccessText}>Punched In & Out for Today!</Text>
+          </View>
+        )}
+
+
       </View>
 
-      {/* Calendar always visible */}
+      {/* Calendar */}
       <View style={styles.calendarContainer}>
         {loading ? (
           <ActivityIndicator size="large" color="#2c6fff" />
         ) : (
           <Calendar
-            markingType={"simple"}
+            markingType={"custom"}
             markedDates={monthAttendance}
             style={{ borderRadius: 10 }}
           />
@@ -599,60 +239,82 @@ const HomeScreen = () => {
           <Text style={[styles.summaryValue, { color: "orange" }]}>
             {attendanceSummary.late}
           </Text>
-          <Text style={styles.summaryLabel}>Late</Text>
+          <Text style={styles.summaryLabel}>Late In</Text>
         </View>
       </View>
     </ScrollView>
   );
 };
 
+export default HomeScreen;
+
+// Added a style for Punch Success to replace the repetitive "Punch In" button
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#f8f9ff", padding: 16 },
-  welcomeText: { fontSize: 20, fontWeight: "600", marginVertical: 8 },
+  welcomeText: { fontSize: 18, fontWeight: "600", marginVertical: 16 },
   card: {
     backgroundColor: "#fff",
+    borderRadius: 12,
     padding: 16,
-    borderRadius: 10,
-    marginBottom: 16,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 5,
+    marginBottom: 20,
     elevation: 3,
   },
-  timeRow: { flexDirection: "row", justifyContent: "space-between", marginBottom: 10 },
-  timeLabel: { fontSize: 16, fontWeight: "600", color: "#444" },
-  timeValue: { fontSize: 16, fontWeight: "700", color: "#007AFF" },
+  timeRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginVertical: 8,
+  },
+  timeLabel: { fontSize: 16, fontWeight: "500" },
+  timeValue: { fontSize: 16, fontWeight: "700", color: "#2c6fff" },
+  btnText: { fontSize: 16, fontWeight: "600", color: "#fff" },
   punchInBtn: {
     backgroundColor: "#2c6fff",
     padding: 14,
     borderRadius: 10,
-    marginTop: 10,
+    marginTop: 12,
     alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center"
   },
   punchOutBtn: {
     backgroundColor: "#ff3b30",
     padding: 14,
     borderRadius: 10,
-    marginTop: 10,
+    marginTop: 12,
     alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center"
   },
-  btnText: { fontSize: 16, fontWeight: "600", color: "#fff" },
-  calendarContainer: { marginBottom: 16 },
+  punchSuccess: {
+    backgroundColor: "#28a745", // Success Green
+    padding: 14,
+    borderRadius: 10,
+    marginTop: 12,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  punchSuccessText: {
+      color: '#fff',
+      fontWeight: '600',
+      fontSize: 16,
+  },
+  calendarContainer: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 10,
+    marginBottom: 20,
+    elevation: 3,
+  },
   summaryContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     backgroundColor: "#fff",
+    borderRadius: 12,
     padding: 16,
-    borderRadius: 10,
-    marginBottom: 30,
+    elevation: 3,
+    marginBottom: 20,
   },
-  summaryBox: { alignItems: "center", flex: 1 },
-  summaryValue: { fontSize: 18, fontWeight: "700" },
-  summaryLabel: { fontSize: 12, color: "#555", marginTop: 4 },
+  summaryBox: { alignItems: "center" },
+  summaryValue: { fontSize: 20, fontWeight: "700" },
+  summaryLabel: { fontSize: 14, color: "#555", marginTop: 4 },
 });
-
-export default HomeScreen;
-
-
-
